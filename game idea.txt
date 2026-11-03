@@ -1,0 +1,21 @@
+You play as a young person who receives a letter from a friend they haven't spoken to in years.
+The letter contains just one sentence:
+"If you're reading this, come back before the moon disappears."
+You return to a small, isolated town called Hollow Creek.
+The town looks familiar, but something is wrong. The streets are empty, clocks have stopped, and everyone seems to have forgotten your friend 'cre' who once lived there.
+As you explore, you discover that the town has been hiding a secret.
+And somehow, you are part of it.
+
+Game loop:
+1) explore the world
+- walk around and discover stuff
+
+2) Investigate stuff
+ - read letters
+ - examine pictures
+ - examine records of some sort that proves your friend used to exist
+
+3) slowly feed the player pieces of the mystery
+
+4) progress somehow
+
