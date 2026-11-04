@@ -1,10 +1,11 @@
 import pygame
 from settings import *
+from assets.colours import *
 
 class menu():
     def __init__(self):
         gluten_location = "assets/fonts/gluten_font.ttf"
-        self.options = ["1. New game", "2. Continue", "3. Settings", "4. Quit    "]
+        self.options = ["1. New game", "2. Continue", "3. Settings", "4. Help.     ", "5. Quit    "]
         self.option = 0
         self.title_font = pygame.font.Font(gluten_location, 76)
         self.menu_font = pygame.font.Font(gluten_location, 46)
@@ -15,18 +16,15 @@ class menu():
                 self.option -= 1
                 if self.option < 0:
                     self.option = len(self.options) - 1
-                print(f"option: {self.option}")
 
             elif event.key == pygame.K_DOWN: # down arrow
                 self.option += 1
                 if self.option > len(self.options) - 1:
                     self.option = 0
-                print(f"option: {self.option}")
+            elif event.key == pygame.K_RETURN:
+                return self.option # code for when option selected
 
     def draw_menu(self, screen):
-        black = 0, 0, 0
-        yellow = 253, 233, 146
-
         title_surface = self.title_font.render("CRESCENT", True, (144, 144, 144))# text, anti-aliasing, rgb colour
         title_rect = title_surface.get_rect()
         title_rect.centerx = screen_width / 2

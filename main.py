@@ -1,6 +1,8 @@
 import pygame
 from settings import * # do not change to import settings idk why it breaks
+from assets.colours import *
 from scenes.menu import menu
+
 
 pygame.init()
 
@@ -20,9 +22,12 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
 
-            menu.menu_selection(event) # do the menu selection method from menu class from menu.py which is in scenes
+            option = menu.menu_selection(event) # do the menu selection method from menu class from menu.py which is in scenes
 
-        screen.fill(background_colour)
+        if option == 4:
+            run = False
+
+        screen.fill(blue)
         menu.draw_menu(screen)
         pygame.display.flip() # keep at bottom
         clock.tick(60)
