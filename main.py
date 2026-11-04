@@ -14,14 +14,12 @@ character_screen = character_creation()
 current_screen = "menu"
 
 def main():
-    global current_screen, active_field
+    global current_screen, active_field, option
     active_field = 0
-    pygame.time.get_ticks()
-    scene_change_cd = 500
-    last_scene_change = 0
     run = True
     
     while run:
+        option = None
         screen.fill(blue)
 
         for event in pygame.event.get():
@@ -31,10 +29,14 @@ def main():
             if current_screen == "menu":
                 option = menu.menu_selection(event)
             elif current_screen == "character_creation":
-                active_field = character_screen.field_selection(event)
-                character_screen.name_selection(screen, event)
-                character_screen.gender_selection(event)
-
+                temp_active_fld = character_screen.field_selection(event)
+                if temp_active_fld == 3:
+                    current_screen = "menu"
+                else:
+                    active_field = temp_active_fld
+                    character_screen.name_selection(event)
+                    character_screen.gender_selection(event)
+        
         if current_screen == "menu":
             menu.draw_menu(screen)
 
