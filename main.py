@@ -2,7 +2,6 @@ import pygame
 from settings import * # do not change to import settings idk why it breaks
 from scenes.menu import menu
 
-
 pygame.init()
 
 clock = pygame.time.Clock()
@@ -23,8 +22,8 @@ def main():
 
             menu.menu_selection(event) # do the menu selection method from menu class from menu.py which is in scenes
 
-        
         screen.fill(background_colour)
+        menu.draw_menu(screen)
         pygame.display.flip() # keep at bottom
         clock.tick(60)
 

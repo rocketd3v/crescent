@@ -1,9 +1,13 @@
 import pygame
+from settings import *
 
 class menu():
     def __init__(self):
-        self.options = ["1. New game", "2. Continue", "3. Settings", "4. Quit"]
+        gluten_location = "assets/fonts/gluten_font.ttf"
+        self.options = ["1. New game", "2. Continue", "3. Settings", "4. Quit    "]
         self.option = 0
+        self.title_font = pygame.font.Font(gluten_location, 76)
+        self.menu_font = pygame.font.Font(gluten_location, 46)
 
     def menu_selection(self, event): # this is called a method btw
         if event.type == pygame.KEYDOWN: # menu selection
@@ -19,7 +23,23 @@ class menu():
                     self.option = 0
                 print(f"option: {self.option}")
 
-class font():
-    def __init__(self):
-        self.title_font = 0 # idk what to put here
-        self.menu_font = 0 #same here
+    def draw_menu(self, screen):
+        black = 0, 0, 0
+        yellow = 253, 233, 146
+
+        title_surface = self.title_font.render("CRESCENT", True, (144, 144, 144))# text, anti-aliasing, rgb colour
+        title_rect = title_surface.get_rect()
+        title_rect.centerx = screen_width / 2
+        title_rect.centery = screen_height / 8
+
+        screen.blit(title_surface, title_rect)
+
+        for option in range(len(self.options)):
+            if option == self.option: # show selected option as yellow and others as black
+                option_surface = self.menu_font.render(f"{self.options[option]}", True, yellow)
+            else:
+                option_surface = self.menu_font.render(f"{self.options[option]}", True, black)
+            option_rect = option_surface.get_rect()
+            option_rect.centerx = screen_width / 6
+            option_rect.centery = (screen_height / 4) + (option * 60)
+            screen.blit(option_surface, option_rect)
