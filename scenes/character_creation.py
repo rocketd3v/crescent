@@ -16,12 +16,14 @@ class character_creation():
                 self.active_field -= 1
                 if self.active_field < 0: # allows wrapping
                     self.active_field = len(self.active_fields) - 1
-            elif event.key == pygame.K_DOWN:
+            elif event.key == pygame.K_DOWN or event.key == pygame.K_TAB:
                 self.active_field += 1
                 if self.active_field > len(self.active_fields) - 1: # allows wrapping
                     self.active_field = 0
-                    
-            return self.active_field
+            elif event.key == pygame.K_RETURN and self.active_field == 2:
+                return "back"
+
+        return self.active_field
 
     def name_selection(self, screen, event):
         accepted_chars = ["z", "y", "x", "w", "v", "u", "t", "s", "r", "q", "p", "o", "n", "m", "l", "k", "j", "i", "h", "g", "f", "e", "d", "c", "b", "a", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "_",]

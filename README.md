@@ -1,3 +1,3 @@
 # Crescent
 
-You need arrow keys (and the return key) to start the game, its long trying to do mouse movement, and WASD feels unnatural
+you can use arrow keys or TAB to navigate the menu, and return to select an option from the menu

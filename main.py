@@ -15,6 +15,10 @@ current_screen = "menu"
 
 def main():
     global current_screen, active_field
+    active_field = 0
+    pygame.time.get_ticks()
+    scene_change_cd = 500
+    last_scene_change = 0
     run = True
     
     while run:
@@ -33,19 +37,24 @@ def main():
 
         if current_screen == "menu":
             menu.draw_menu(screen)
+
+            if option == 0:
+                current_screen = "character_creation"
+            elif option == 1:
+                pass
+            elif option == 2: # continue
+                pass
+            elif option == 3: # settings
+                pass
+            elif option == 4:
+                run = False
+
         elif current_screen == "character_creation":
             character_screen.draw_character_creation(screen)
 
-        if option == 0:
-            current_screen = "character_creation"
-        elif option == 1:
-            pass
-        elif option == 2: # continue
-            pass
-        elif option == 3: # settings
-            pass
-        elif option == 4:
-            run = False
+            if active_field == "back":
+                current_screen = "menu"
+                menu.draw_menu(screen)
 
         pygame.display.flip() # keep at bottom
         clock.tick(60)

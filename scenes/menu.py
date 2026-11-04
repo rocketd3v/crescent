@@ -14,7 +14,7 @@ class menu():
                 if self.option < 0:
                     self.option = len(self.options) - 1
 
-            elif event.key == pygame.K_DOWN: # down arrow
+            elif event.key == pygame.K_DOWN or event.key == pygame.K_TAB: # down arrow
                 self.option += 1
                 if self.option > len(self.options) - 1:
                     self.option = 0
