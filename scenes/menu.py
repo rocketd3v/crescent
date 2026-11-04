@@ -36,7 +36,7 @@ class menu():
 
         for option in range(len(self.options)):
             if option == self.option: # show selected option as yellow and others as black
-                option_surface = self.menu_font.render(f"{self.options[option]}", True, yellow)
+                option_surface = self.menu_font.render(f"> {self.options[option]}", True, yellow)
             else:
                 option_surface = self.menu_font.render(f"{self.options[option]}", True, black)
             option_rect = option_surface.get_rect()
