@@ -4,7 +4,6 @@ from assets.colours import *
 
 class menu():
     def __init__(self):
-        gluten_location = "assets/fonts/gluten_font.ttf"
         self.options = ["1. New game", "2. Continue", "3. Settings", "4. Help.     ", "5. Quit    "]
         self.option = 0
         self.title_font = pygame.font.Font(gluten_location, 76)
