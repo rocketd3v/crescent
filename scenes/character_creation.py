@@ -61,6 +61,8 @@ class character_creation():
                 text_after_field = self.genders[self.gender]
             elif field == 2:
                 text_after_field = ""
+            elif field == 3:
+                text_after_field = ""
 
             if field == self.active_field:
                 field_surface = gluten_menu_font.render(f"> {self.active_fields[field]} {text_after_field}", True, yellow)
