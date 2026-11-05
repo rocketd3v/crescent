@@ -30,7 +30,11 @@ class player():
             for frame in range(1, 4):
                 image = pygame.image.load(f"assets/characters/{self.gender}/{direction}_{frame}.png").convert_alpha()
 
-                image = pygame.transform.scale(image, (32, 32))
+                if self.gender == "Male":
+                    image = pygame.transform.scale(image, (32, 32))
+                else:
+                    image = pygame.transform.scale(image, (48, 48))
+
                 self.animations[direction].append(image)
 
     def draw(self, screen):

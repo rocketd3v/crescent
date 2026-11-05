@@ -1,10 +1,10 @@
-
+# for the 3x3 characters (yes this script is ai)
 from PIL import Image
 import os
 
 # Open the original sprite sheet
 elliot_character_sheet = Image.open(
-    "assets/characters/elliot_sheet.png"
+    "assets/characters/mara_sheet.png" # change 3x3 character file location here
 ).convert("RGBA")
 
 # Find the area containing visible pixels
