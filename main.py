@@ -77,9 +77,10 @@ def main():
             hollow_creek.draw(screen)
             player_character.draw(screen)
             player_character.movement()
+            player_character.animate(dt)
 
         pygame.display.flip() # keep at bottom
-        clock.tick(60)
+        dt = clock.tick(60)
 
 
 if __name__ == "__main__":
