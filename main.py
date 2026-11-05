@@ -1,5 +1,5 @@
 import pygame
-from settings import * # do not change to import settings idk why it breaks
+from settings import *  # do not change to import settings
 from assets.colours import *
 from scenes.menu import menu
 from scenes.character_creation import *
@@ -25,11 +25,12 @@ def main():
     run = True
 
     while run:
+        dt = clock.tick(60)
         option = None
         screen.fill(blue)
 
         for event in pygame.event.get():
-            if event.type == pygame.QUIT: # do not delete this
+            if event.type == pygame.QUIT:
                 run = False
 
             if current_screen == "menu":
@@ -38,13 +39,15 @@ def main():
             elif current_screen == "character_creation":
                 temp_active_fld = character_screen.field_selection(event)
 
-                if temp_active_fld == 3: # back
+                if temp_active_fld == 3:
                     current_screen = "menu"
 
-                elif temp_active_fld == 2: # start game
+                elif temp_active_fld == 2:
                     player_character = player(
                         character_screen.name,
-                        character_screen.gender
+                        character_screen.gender,
+                        hollow_creek.pixel_width,
+                        hollow_creek.pixel_height
                     )
                     current_screen = "game"
 
@@ -63,9 +66,9 @@ def main():
                     current_screen = "character_creation"
                 elif option == 1:
                     pass
-                elif option == 2: # continue
+                elif option == 2:
                     pass
-                elif option == 3: # settings
+                elif option == 3:
                     pass
                 elif option == 4:
                     run = False
@@ -74,13 +77,38 @@ def main():
             character_screen.draw_character_creation(screen)
 
         elif current_screen == "game":
-            hollow_creek.draw(screen)
-            player_character.draw(screen)
             player_character.movement()
             player_character.animate(dt)
 
-        pygame.display.flip() # keep at bottom
-        dt = clock.tick(60)
+            # Calculate camera position
+            camera_x = (
+                player_character.x
+                + player_character.width / 2
+                - screen_width / 2
+            )
+
+            camera_y = (
+                player_character.y
+                + player_character.height / 2
+                - screen_height / 2
+            )
+
+            # Keep camera inside map boundaries
+            camera_x = max(
+                0,
+                min(camera_x, hollow_creek.pixel_width - screen_width)
+            )
+
+            camera_y = max(
+                0,
+                min(camera_y, hollow_creek.pixel_height - screen_height)
+            )
+
+            # Draw map and player
+            hollow_creek.draw(screen, camera_x, camera_y)
+            player_character.draw(screen, camera_x, camera_y)
+
+        pygame.display.flip()
 
 
 if __name__ == "__main__":

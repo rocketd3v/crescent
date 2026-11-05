@@ -1,3 +1,5 @@
+# this whole file is ai, it broke and icba to fixs
+
 from pytmx.util_pygame import load_pygame
 
 
@@ -23,10 +25,14 @@ class game_map():
         self.pixel_width = self.map_width * self.tile_width
         self.pixel_height = self.map_height * self.tile_height
 
-    def draw(self, screen):
+    def draw(self, screen, camera_x, camera_y):
         for layer in self.tmx_data.visible_layers:
             if hasattr(layer, "tiles"):
                 for tile_column, tile_row, image in layer.tiles():
                     pixel_x = tile_column * self.tile_width
                     pixel_y = tile_row * self.tile_height
-                    screen.blit(image, (pixel_x, pixel_y))
+
+                    screen_x = pixel_x - camera_x
+                    screen_y = pixel_y - camera_y
+
+                    screen.blit(image, (screen_x, screen_y))
