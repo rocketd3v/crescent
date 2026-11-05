@@ -75,6 +75,8 @@ def main():
 
         elif current_screen == "game":
             hollow_creek.draw(screen)
+            player_character.draw(screen)
+            player_character.movement()
 
         pygame.display.flip() # keep at bottom
         clock.tick(60)
