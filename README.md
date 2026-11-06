@@ -4,7 +4,7 @@ you can use arrow keys or TAB to navigate the menu, and return to select an opti
 
 i have no idea where the /.DS_Store file came from
 
-Total time taken: 8h 53m
+Total time taken: 9h 32m
 
 You play as a young person who receives a letter from a friend they haven't spoken to in years.
 The letter contains just one sentence:
