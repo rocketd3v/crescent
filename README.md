@@ -12,5 +12,6 @@ mara - none (chatgpt)
 
 grass - https://cupnooble.itch.io/sprout-lands-asset-pack
 flowers - https://arimendoinua.itch.io/pixel-art-flowers-32x32?download
+trees - https://opengameart.org/content/pixel-art-simple-trees
 
 If i've missed any please tell me
