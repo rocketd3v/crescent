@@ -41,6 +41,6 @@ class menu():
                 option_surface = menu_font.render(f"{self.options[option]}", True, black)
 
             option_rect = option_surface.get_rect()
-            option_rect.centerx = screen_width / 6
+            option_rect.centerx = screen_width / 2
             option_rect.centery = (screen_height / 4) + (option * 60)
             screen.blit(option_surface, option_rect)
