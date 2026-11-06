@@ -1,3 +1,4 @@
+
 import pygame
 from settings import *
 from assets.colours import *
@@ -18,11 +19,15 @@ class menu():
                 self.option += 1
                 if self.option > len(self.options) - 1:
                     self.option = 0
+
             elif event.key == pygame.K_RETURN:
                 return self.option # code for when option selected
 
-    def draw_menu(self, screen):
-        title_surface = gluten_title_font.render("CRESCENT", True, gray) # text, anti-aliasing, rgb colour
+    def draw_menu(self, screen, settings_screen):
+        title_font = pygame.font.Font(settings_screen.font_path, 76)
+        menu_font = pygame.font.Font(settings_screen.font_path, 46)
+
+        title_surface = title_font.render("CRESCENT", True, gray)
         title_rect = title_surface.get_rect()
         title_rect.centerx = screen_width / 2
         title_rect.centery = screen_height / 8
@@ -30,10 +35,10 @@ class menu():
         screen.blit(title_surface, title_rect)
 
         for option in range(len(self.options)):
-            if option == self.option: # show selected option as yellow and others as black
-                option_surface = gluten_menu_font.render(f"> {self.options[option]}", True, yellow)
+            if option == self.option:
+                option_surface = menu_font.render(f"> {self.options[option]}", True, yellow)
             else:
-                option_surface = gluten_menu_font.render(f"{self.options[option]}", True, black)
+                option_surface = menu_font.render(f"{self.options[option]}", True, black)
 
             option_rect = option_surface.get_rect()
             option_rect.centerx = screen_width / 6

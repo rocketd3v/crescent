@@ -85,7 +85,7 @@ def main():
                 screen, current_screen = settings_screen.handle_event(event, screen)
 
         if current_screen == "menu":
-            menu.draw_menu(screen)
+            menu.draw_menu(screen, settings_screen)
 
             if option is not None:
                 if option == 0:

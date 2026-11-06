@@ -1,3 +1,4 @@
+
 import pygame
 from assets.colours import *
 from settings import *
@@ -9,24 +10,23 @@ class character_creation():
         self.gender = 0
         self.active_fields = ["Name: ", "Gender: ", "Start game", "Back"]
         self.active_field = 0
-        self.accepted_chars = ["z", "y", "x", "w", "v", "u", "t", "s", "r", "q", "p", "o", "n", "m", "l", "k", "j", "i", "h", "g", "f", "e", "d", "c", "b", "a", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "_",]
+        self.accepted_chars = ["z", "y", "x", "w", "v", "u", "t", "s", "r", "q", "p", "o", "n", "m", "l", "k", "j", "i", "h", "g", "f", "e", "d", "c", "b", "a", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "_"]
 
     def field_selection(self, event): 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
                 self.active_field -= 1
-                if self.active_field < 0: # allows wrapping
+                if self.active_field < 0:
                     self.active_field = len(self.active_fields) - 1
             elif event.key == pygame.K_DOWN or event.key == pygame.K_TAB:
                 self.active_field += 1
-                if self.active_field > len(self.active_fields) - 1: # allows wrapping
+                if self.active_field > len(self.active_fields) - 1:
                     self.active_field = 0
             elif event.key == pygame.K_RETURN:
                 return self.active_field
 
     def name_selection(self, event):
         if self.active_field == 0:
-
             if event.type == pygame.KEYDOWN:
                 if event.key != pygame.K_BACKSPACE:
                     if len(self.name) < 16 and event.unicode.lower() in self.accepted_chars:
@@ -46,8 +46,11 @@ class character_creation():
                     if self.gender < 0:
                         self.gender = 1
 
-    def draw_character_creation(self, screen):
-        title_surface = gluten_title_font.render("Character Creation", True, gray)
+    def draw_character_creation(self, screen, settings_screen):
+        title_font = pygame.font.Font(settings_screen.font_path, 76)
+        menu_font = pygame.font.Font(settings_screen.font_path, 46)
+
+        title_surface = title_font.render("Character Creation", True, gray)
         title_rect = title_surface.get_rect()
         title_rect.centerx = screen_width / 2
         title_rect.centery = screen_height / 8
@@ -65,9 +68,9 @@ class character_creation():
                 text_after_field = ""
 
             if field == self.active_field:
-                field_surface = gluten_menu_font.render(f"> {self.active_fields[field]} {text_after_field}", True, yellow)
+                field_surface = menu_font.render(f"> {self.active_fields[field]} {text_after_field}", True, yellow)
             else:
-                field_surface = gluten_menu_font.render(f"{self.active_fields[field]} {text_after_field}", True, black)
+                field_surface = menu_font.render(f"{self.active_fields[field]} {text_after_field}", True, black)
 
             field_rect = field_surface.get_rect()
             field_rect.centerx = (screen_width / 6) + 60
