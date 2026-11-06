@@ -1,12 +1,15 @@
+
 import pygame
 from settings import *
 
 
 class player():
-    def __init__(self, name, gender, world_width, world_height):
+    def __init__(self, name, gender, world_width, world_height, keybinds):
         genders = ["Male", "Female"]
         self.name = name
         self.gender = genders[gender]
+
+        self.keybinds = keybinds
 
         self.speed = 3
         self.direction = "up"
@@ -61,31 +64,31 @@ class player():
         self.moving = False
         keys = pygame.key.get_pressed()
 
-        if keys[pygame.K_w] and self.y > 0:
+        if keys[self.keybinds["Move up"]] and self.y > 0:
             self.direction = "up"
             self.moving = True
             self.facing_right = False
             self.y = max(0, self.y - self.speed)
 
-        if keys[pygame.K_s] and self.y < self.world_height - self.height:
+        if keys[self.keybinds["Move down"]] and self.y < self.world_height - self.height:
             self.direction = "down"
             self.moving = True
             self.facing_right = False
             self.y = min(self.world_height - self.height, self.y + self.speed)
 
-        if keys[pygame.K_d] and self.x < self.world_width - self.width:
+        if keys[self.keybinds["Move right"]] and self.x < self.world_width - self.width:
             self.direction = "side"
             self.moving = True
             self.facing_right = True
             self.x = min(self.world_width - self.width, self.x + self.speed)
 
-        if keys[pygame.K_a] and self.x > 0:
+        if keys[self.keybinds["Move left"]] and self.x > 0:
             self.direction = "side"
             self.moving = True
             self.facing_right = False
             self.x = max(0, self.x - self.speed)
 
-        if keys[pygame.K_ESCAPE]:
+        if keys[self.keybinds["Open menu"]]:
             pass  # open pause screen
 
     def animate(self, dt):
