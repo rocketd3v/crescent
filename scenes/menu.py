@@ -4,7 +4,7 @@ from assets.colours import *
 
 class menu():
     def __init__(self):
-        self.options = ["1. New game", "2. Continue", "3. Settings", "4. Help      ", "5. Quit    "]
+        self.options = ["1. New game", "2. Continue", "3. Settings", "4. Quit    "]
         self.option = 0
 
     def menu_selection(self, event): # this is called a method btw
@@ -22,7 +22,7 @@ class menu():
                 return self.option # code for when option selected
 
     def draw_menu(self, screen):
-        title_surface = gluten_title_font.render("CRESCENT", True, (144, 144, 144))# text, anti-aliasing, rgb colour
+        title_surface = gluten_title_font.render("CRESCENT", True, gray) # text, anti-aliasing, rgb colour
         title_rect = title_surface.get_rect()
         title_rect.centerx = screen_width / 2
         title_rect.centery = screen_height / 8

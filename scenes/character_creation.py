@@ -47,7 +47,7 @@ class character_creation():
                         self.gender = 1
 
     def draw_character_creation(self, screen):
-        title_surface = gluten_title_font.render("Character Creation", True, (144, 144, 144))
+        title_surface = gluten_title_font.render("Character Creation", True, gray)
         title_rect = title_surface.get_rect()
         title_rect.centerx = screen_width / 2
         title_rect.centery = screen_height / 8

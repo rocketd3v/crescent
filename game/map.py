@@ -1,7 +1,7 @@
 # this whole file is ai, it broke and icba to fixs
 
 from pytmx.util_pygame import load_pygame
-
+import pygame
 
 class game_map():
     def __init__(self, filename):
@@ -15,6 +15,17 @@ class game_map():
              if layer.name.lower() == "buildings"),
             None
         )
+
+        self.interactables = []
+
+        interactables_layer = self.tmx_data.get_layer_by_name("interactables")
+
+        for obj in interactables_layer:
+            self.interactables.append({
+                "name": obj.name,
+                "class": obj.type,
+                "rect": pygame.Rect(obj.x, obj.y, obj.width, obj.height)
+            })
 
         self.map_width = self.tmx_data.width
         self.map_height = self.tmx_data.height

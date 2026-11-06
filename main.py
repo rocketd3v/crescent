@@ -1,3 +1,4 @@
+
 import pygame
 from settings import *  # do not change to import settings
 from assets.colours import *
@@ -7,6 +8,7 @@ from game.player import *
 from game.map import game_map
 from game.camera import camera
 from scenes.settings_menu import settings_menu
+from systems.interactions import *
 
 pygame.init()
 
@@ -19,6 +21,7 @@ character_screen = character_creation()
 settings_screen = settings_menu()
 current_screen = "menu"
 hollow_creek = game_map("assets/maps/hollow_creek.tmx")
+interaction_system = interactions(hollow_creek.interactables)
 
 camera_controller = camera(
     hollow_creek.pixel_width,
@@ -40,15 +43,20 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
 
-            elif event.type == pygame.KEYDOWN and event.key == pygame.K_F1:
-                settings_screen.fullscreen = not settings_screen.fullscreen
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_F1:
+                    settings_screen.fullscreen = not settings_screen.fullscreen
 
-                if settings_screen.fullscreen:
-                    screen = pygame.display.set_mode((screen_width, screen_height), pygame.FULLSCREEN)
-                else:
-                    screen = pygame.display.set_mode((screen_width, screen_height))
+                    if settings_screen.fullscreen:
+                        screen = pygame.display.set_mode((screen_width, screen_height), pygame.FULLSCREEN)
+                    else:
+                        screen = pygame.display.set_mode((screen_width, screen_height))
 
-            elif current_screen == "menu":
+                elif current_screen == "game" and event.key == player_character.keybinds["Interact"]:
+                    interaction_system.start_interaction()
+                    print(interaction_system.dialog_active)
+
+            if current_screen == "menu":
                 option = menu.menu_selection(event)
 
             elif current_screen == "character_creation":
@@ -58,7 +66,13 @@ def main():
                     current_screen = "menu"
 
                 elif temp_active_fld == 2:
-                    player_character = player(character_screen.name, character_screen.gender, hollow_creek.pixel_width, hollow_creek.pixel_height, settings_screen.keybinds)
+                    player_character = player(
+                        character_screen.name,
+                        character_screen.gender,
+                        hollow_creek.pixel_width,
+                        hollow_creek.pixel_height,
+                        settings_screen.keybinds
+                    )
                     current_screen = "game"
 
                 elif temp_active_fld is not None:
@@ -77,18 +91,12 @@ def main():
                 if option == 0:
                     character_screen.active_field = 0
                     current_screen = "character_creation"
-
                 elif option == 1:
                     pass
-
                 elif option == 2:
                     settings_screen.option = 0
                     current_screen = "settings"
-
                 elif option == 3:
-                    pass
-
-                elif option == 4:
                     run = False
 
         elif current_screen == "character_creation":
@@ -101,9 +109,9 @@ def main():
             player_character.movement()
             player_character.animate(dt)
             camera_controller.update(player_character, screen)
+            interaction_system.check_nearby(player_character)
 
             hollow_creek.draw(screen, camera_controller.x, camera_controller.y)
-
             player_character.draw(screen, camera_controller.x, camera_controller.y)
 
         pygame.display.flip()

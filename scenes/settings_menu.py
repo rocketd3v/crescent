@@ -1,4 +1,3 @@
-
 import pygame
 from settings import *
 from assets.colours import *
@@ -50,7 +49,7 @@ class settings_menu():
         return screen, "settings"
 
     def draw(self, screen):
-        title_surface = gluten_title_font.render("SETTINGS", True, black)
+        title_surface = gluten_title_font.render("SETTINGS", True, gray)
         title_rect = title_surface.get_rect()
         title_rect.centerx = screen_width / 2
         title_rect.centery = screen_height / 10
@@ -62,7 +61,7 @@ class settings_menu():
 
             if option_name == "Fullscreen":
                 value = "ON" if self.fullscreen else "OFF"
-                value += " (F11)"
+                value += " (F1)"
 
             elif option_name == "Volume":
                 value = f"{self.volume}%"
@@ -74,14 +73,15 @@ class settings_menu():
                 key = self.keybinds[option_name]
                 value = pygame.key.name(key).upper()
 
-            text = f"> {option_name}: {value}"
 
             if option_name == "Back":
                 text = "> Back"
 
             if option == self.option:
+                text = f"> {option_name}: {value}"
                 option_surface = gluten_menu_font.render(text, True, yellow)
             else:
+                text = f"{option_name}: {value}"
                 option_surface = gluten_menu_font.render(text, True, black)
 
             option_rect = option_surface.get_rect()
