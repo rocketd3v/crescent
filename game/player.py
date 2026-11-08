@@ -1,9 +1,11 @@
+
 import pygame
 from settings import *
 from assets.colours import *
 
+
 class player():
-    def __init__(self, name, gender, world_width, world_height, keybinds, collision_rects):
+    def __init__(self, name, gender, world_width, world_height, keybinds, collision_rects, font_path):
         genders = ["Male", "Female"]
         self.name = name
         self.gender = genders[gender]
@@ -20,6 +22,9 @@ class player():
 
         self.animation_timer = 0
         self.animation_speed = 150
+
+        # Player name font
+        self.name_font = pygame.font.Font(font_path, 20)
 
         self.animations = {
             "down": [],
@@ -49,7 +54,6 @@ class player():
         self.world_width = world_width
         self.world_height = world_height
 
-
     def draw(self, screen, camera_x, camera_y):
         image = self.animations[self.direction][self.animation_frame]
 
@@ -61,16 +65,17 @@ class player():
             (self.x - camera_x, self.y - camera_y)
         )
 
-        # Draw player name
-        name_font = pygame.font.Font(None, 20)
-        name_surface = name_font.render(self.name, True, white)
+        # Draw player name above head
+        name_surface = self.name_font.render(
+            self.name, True, white
+        )
+
         name_rect = name_surface.get_rect()
 
         name_rect.centerx = self.x - camera_x + self.width / 2
         name_rect.bottom = self.y - camera_y - 4
 
         screen.blit(name_surface, name_rect)
-
 
     def movement(self):
         self.moving = False

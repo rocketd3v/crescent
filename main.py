@@ -100,7 +100,8 @@ def main():
                         hollow_creek.pixel_width,
                         hollow_creek.pixel_height,
                         settings_screen.keybinds,
-                        hollow_creek.collision_rects
+                        hollow_creek.collision_rects,
+                        settings_screen.font_path
                     )
                     change_scene("game")
 
