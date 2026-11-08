@@ -2,7 +2,7 @@
 
 you can use arrow keys or TAB to navigate the menu, and return to select an option from the menu
 
-Total time taken: 10h 54m
+Total time taken: 11h 38m
 
 You play as a young person who receives a letter from a friend they haven't spoken to in years.
 The letter contains just one sentence:

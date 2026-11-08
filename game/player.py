@@ -1,15 +1,15 @@
-
 import pygame
 from settings import *
-
+from assets.colours import *
 
 class player():
-    def __init__(self, name, gender, world_width, world_height, keybinds):
+    def __init__(self, name, gender, world_width, world_height, keybinds, collision_rects):
         genders = ["Male", "Female"]
         self.name = name
         self.gender = genders[gender]
 
         self.keybinds = keybinds
+        self.collision_rects = collision_rects
 
         self.speed = 3
         self.direction = "up"
@@ -49,6 +49,7 @@ class player():
         self.world_width = world_width
         self.world_height = world_height
 
+
     def draw(self, screen, camera_x, camera_y):
         image = self.animations[self.direction][self.animation_frame]
 
@@ -60,33 +61,80 @@ class player():
             (self.x - camera_x, self.y - camera_y)
         )
 
+        # Draw player name
+        name_font = pygame.font.Font(None, 20)
+        name_surface = name_font.render(self.name, True, white)
+        name_rect = name_surface.get_rect()
+
+        name_rect.centerx = self.x - camera_x + self.width / 2
+        name_rect.bottom = self.y - camera_y - 4
+
+        screen.blit(name_surface, name_rect)
+
+
     def movement(self):
         self.moving = False
         keys = pygame.key.get_pressed()
 
-        if keys[self.keybinds["Move up"]] and self.y > 0:
+        dx = 0
+        dy = 0
+
+        if keys[self.keybinds["Move up"]]:
+            dy -= self.speed
             self.direction = "up"
-            self.moving = True
             self.facing_right = False
-            self.y = max(0, self.y - self.speed)
 
-        if keys[self.keybinds["Move down"]] and self.y < self.world_height - self.height:
+        if keys[self.keybinds["Move down"]]:
+            dy += self.speed
             self.direction = "down"
-            self.moving = True
             self.facing_right = False
-            self.y = min(self.world_height - self.height, self.y + self.speed)
 
-        if keys[self.keybinds["Move right"]] and self.x < self.world_width - self.width:
+        if keys[self.keybinds["Move right"]]:
+            dx += self.speed
             self.direction = "side"
-            self.moving = True
             self.facing_right = True
-            self.x = min(self.world_width - self.width, self.x + self.speed)
 
-        if keys[self.keybinds["Move left"]] and self.x > 0:
+        if keys[self.keybinds["Move left"]]:
+            dx -= self.speed
             self.direction = "side"
-            self.moving = True
             self.facing_right = False
-            self.x = max(0, self.x - self.speed)
+
+        if dx != 0 or dy != 0:
+            self.moving = True
+
+        # Horizontal movement
+        self.x += dx
+        player_rect = pygame.Rect(
+            self.x, self.y, self.width, self.height
+        )
+
+        for collision in self.collision_rects:
+            if player_rect.colliderect(collision):
+                if dx > 0:
+                    player_rect.right = collision.left
+                elif dx < 0:
+                    player_rect.left = collision.right
+
+                self.x = player_rect.x
+
+        # Vertical movement
+        self.y += dy
+        player_rect = pygame.Rect(
+            self.x, self.y, self.width, self.height
+        )
+
+        for collision in self.collision_rects:
+            if player_rect.colliderect(collision):
+                if dy > 0:
+                    player_rect.bottom = collision.top
+                elif dy < 0:
+                    player_rect.top = collision.bottom
+
+                self.y = player_rect.y
+
+        # Keep player inside map
+        self.x = max(0, min(self.x, self.world_width - self.width))
+        self.y = max(0, min(self.y, self.world_height - self.height))
 
         if keys[self.keybinds["Open menu"]]:
             pass  # open pause screen

@@ -60,6 +60,7 @@ def main():
         dt = clock.tick(60)
         option = None
         screen.fill(blue)
+        interaction_system.update()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -98,7 +99,8 @@ def main():
                         character_screen.gender,
                         hollow_creek.pixel_width,
                         hollow_creek.pixel_height,
-                        settings_screen.keybinds
+                        settings_screen.keybinds,
+                        hollow_creek.collision_rects
                     )
                     change_scene("game")
 
@@ -147,6 +149,8 @@ def main():
 
             hollow_creek.draw(screen, camera_controller.x, camera_controller.y)
             player_character.draw(screen, camera_controller.x, camera_controller.y)
+            interaction_system.draw_prompt(screen, settings_screen)
+            interaction_system.draw_dialog(screen, settings_screen)
 
         pygame.display.flip()
 
