@@ -4,13 +4,6 @@ you can use arrow keys or TAB to navigate the menu, and return to select an opti
 
 Total time taken: 13h 2m
 
-You play as a young person who receives a letter from a friend they haven't spoken to in years.
-The letter contains just one sentence:
-"If you're reading this, come back before the moon disappears."
-You return to a small, isolated town called Hollow Creek.
-The town looks familiar, but something is wrong. The streets are empty, clocks have stopped, and everyone seems to have forgotten your friend 'cre' who once lived there.
-As you explore, you discover that the town has been hiding a secret.
-And somehow, you are part of it.
 
 Game loop:
 1) explore the world
@@ -25,11 +18,30 @@ Game loop:
 
 4) progress somehow
 
+# How to run from source
+requirements: (check requirements.txt)
+python 3
+pygame
+pytmx
+pillow
 
+clone the repo:
+
+git clone https://github.com/rocketd3v/crescent.git
+cd crescent
+
+install the required dependencies:
+pip3 install -r requirements.txt
+
+to run game:
+python3 main.py
 
 # sprite links
 elliot - https://es.pixilart.com/art/scott-the-woz-sr2ef5c66b5f266?ft=album&ft_id=267008
 mara - none (chatgpt)
+arthur - chatgpt
+evelyn - chatgpt
+thomas - chatgpt
 
 grass - https://cupnooble.itch.io/sprout-lands-asset-pack
 flowers - https://arimendoinua.itch.io/pixel-art-flowers-32x32?download

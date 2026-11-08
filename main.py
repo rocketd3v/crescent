@@ -1,6 +1,4 @@
 import pygame
-import os
-from datetime import datetime
 
 from settings import *  # do not change to import settings
 from assets.colours import *
@@ -12,7 +10,7 @@ from game.camera import camera
 from scenes.settings_menu import settings_menu
 from systems.interactions import *
 from systems.objectives import objective_tracker
-from game.npc import npc
+from game.npc import npc, house_npc
 
 
 pygame.init()
@@ -29,6 +27,9 @@ objective_system = objective_tracker(settings_screen.font_path)
 current_screen = "menu"
 scene_history = []
 
+# Ending screen
+ending_alpha = 0
+
 hollow_creek = game_map("assets/maps/hollow_creek.tmx")
 interaction_system = interactions(hollow_creek.interactables)
 
@@ -41,6 +42,33 @@ player_character = None
 important_character = None
 
 
+# Create the house residents once.
+
+blue_npc = house_npc(
+    "Thomas",
+    "blue_house",
+    hollow_creek.interactables,
+    hollow_creek.collision_rects,
+    settings_screen.font_path
+)
+
+black_npc = house_npc(
+    "Evelyn",
+    "black_house",
+    hollow_creek.interactables,
+    hollow_creek.collision_rects,
+    settings_screen.font_path
+)
+
+green_npc = house_npc(
+    "Arthur",
+    "green_house",
+    hollow_creek.interactables,
+    hollow_creek.collision_rects,
+    settings_screen.font_path
+)
+
+
 def change_scene(new_scene):
     global current_screen, scene_history
 
@@ -51,7 +79,11 @@ def change_scene(new_scene):
 def go_back():
     global current_screen, scene_history
 
-    if current_screen == "game":
+    if current_screen == "ending":
+        current_screen = "menu"
+        scene_history.clear()
+
+    elif current_screen == "game":
         current_screen = "menu"
         scene_history.clear()
 
@@ -81,19 +113,60 @@ def toggle_fullscreen():
     pygame.mouse.set_visible(True)
 
 
-def take_screenshot():
-    os.makedirs("screenshots", exist_ok=True)
+def draw_ending():
+    global ending_alpha
 
-    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    filename = f"screenshots/crescent_{timestamp}.png"
+    # Fade to black
+    screen.fill((0, 0, 0))
 
-    pygame.image.save(screen, filename)
-    print(f"Screenshot saved: {filename}")
+    if ending_alpha < 255:
+        ending_alpha = min(255, ending_alpha + 4)
+
+    # Ending title
+    title_font = pygame.font.Font(
+        settings_screen.font_path,
+        76
+    )
+
+    title_surface = title_font.render(
+        "THE END",
+        True,
+        white
+    )
+
+    title_surface.set_alpha(ending_alpha)
+
+    title_rect = title_surface.get_rect(
+        center=(screen.get_width() // 2, screen.get_height() // 2 - 50)
+    )
+
+    screen.blit(title_surface, title_rect)
+
+    # Return to menu option
+    button_font = pygame.font.Font(
+        settings_screen.font_path,
+        32
+    )
+
+    button_surface = button_font.render(
+        "Return to Main Menu",
+        True,
+        white
+    )
+
+    button_surface.set_alpha(ending_alpha)
+
+    button_rect = button_surface.get_rect(
+        center=(screen.get_width() // 2, screen.get_height() // 2 + 50)
+    )
+
+    screen.blit(button_surface, button_rect)
 
 
 def main():
     global current_screen, active_field, option
     global player_character, important_character, screen
+    global ending_alpha
 
     active_field = 0
     run = True
@@ -101,7 +174,6 @@ def main():
     while run:
         dt = clock.tick(60)
         option = None
-        screenshot_requested = False
 
         screen.fill(blue)
         interaction_system.update()
@@ -116,29 +188,66 @@ def main():
 
             elif event.type == pygame.KEYDOWN:
 
-                if event.key == pygame.K_p:
-                    screenshot_requested = True
-                    continue
+                if event.key == pygame.K_ESCAPE:
 
-                elif event.key == pygame.K_ESCAPE:
-                    go_back()
+                    if current_screen == "ending":
+                        current_screen = "menu"
+                        scene_history.clear()
+                    else:
+                        go_back()
+
                     continue
 
                 elif event.key == pygame.K_F1:
                     toggle_fullscreen()
                     continue
 
+                # Ending screen controls
+                elif current_screen == "ending":
+
+                    if event.key in (
+                        pygame.K_RETURN,
+                        pygame.K_SPACE
+                    ):
+                        current_screen = "menu"
+                        scene_history.clear()
+
+                # Interactions
                 elif (
                     current_screen == "game"
                     and player_character is not None
                     and event.key == player_character.keybinds["Interact"]
                 ):
-                    interaction_system.start_interaction()
+
+                    if interaction_system.dialog_active:
+                        interaction_system.start_interaction()
+
+                    elif interaction_system.active_interactable is not None:
+
+                        interactable_name = (
+                            interaction_system.active_interactable["name"]
+                        )
+
+                        print("Interacted with:", interactable_name)
+
+                        interaction_system.handle_interaction(
+                            interactable_name,
+                            objective_system
+                        )
+
+            # Mouse controls for ending screen
+            elif (
+                event.type == pygame.MOUSEBUTTONDOWN
+                and current_screen == "ending"
+            ):
+                current_screen = "menu"
+                scene_history.clear()
 
             if current_screen == "menu":
                 option = menu.menu_selection(event)
 
             elif current_screen == "character_creation":
+
                 temp_active_fld = character_screen.field_selection(event)
 
                 if temp_active_fld == 3:
@@ -146,21 +255,34 @@ def main():
 
                 elif temp_active_fld == 2:
 
-                    # Remove the previous NPC when starting a new game
+                    # Remove the previous Mara / Elliot
                     if important_character is not None:
-                        hollow_creek.collision_rects.remove(
-                            important_character.rect
-                        )
+
+                        if important_character.rect in hollow_creek.collision_rects:
+                            hollow_creek.collision_rects.remove(
+                                important_character.rect
+                            )
 
                         hollow_creek.interactables = [
                             item for item in hollow_creek.interactables
                             if item["name"] != "npc"
                         ]
 
-                        # Keep the interaction system connected to the list
-                        interaction_system.interactables = hollow_creek.interactables
+                        interaction_system.interactables = (
+                            hollow_creek.interactables
+                        )
 
-                    # Create the player
+                    # Reset objectives
+                    objective_system.current_objective = 0
+                    objective_system.completed = False
+
+                    # Reset quest progress and remove quest items
+                    interaction_system.reset_story()
+
+                    # Reset ending fade
+                    ending_alpha = 0
+
+                    # Create player
                     player_character = player(
                         character_screen.name,
                         character_screen.gender,
@@ -171,7 +293,7 @@ def main():
                         settings_screen.font_path
                     )
 
-                    # Create the important character once
+                    # Create Mara / Elliot
                     important_character = npc(
                         player_character.gender,
                         hollow_creek.interactables,
@@ -193,8 +315,18 @@ def main():
                     screen
                 )
 
+        # Detect when the final note dialogue has been closed.
+        if (
+            current_screen == "game"
+            and interaction_system.quest_stage == 9
+            and not interaction_system.dialog_active
+        ):
+            current_screen = "ending"
+            ending_alpha = 0
+
         # Main menu
         if current_screen == "menu":
+
             menu.draw_menu(screen, settings_screen)
 
             if option is not None:
@@ -207,7 +339,14 @@ def main():
 
                 elif option == 1:
                     if player_character is not None:
-                        current_screen = "game"
+
+                        # Continue to the ending if the story is finished.
+                        if interaction_system.quest_stage == 9:
+                            current_screen = "ending"
+                            ending_alpha = 0
+                        else:
+                            current_screen = "game"
+
                         scene_history.clear()
 
                 elif option == 2:
@@ -219,6 +358,7 @@ def main():
 
         # Character creation
         elif current_screen == "character_creation":
+
             character_screen.draw_character_creation(
                 screen,
                 settings_screen
@@ -226,6 +366,7 @@ def main():
 
         # Settings
         elif current_screen == "settings":
+
             settings_screen.draw(screen)
 
         # Game
@@ -237,14 +378,51 @@ def main():
             camera_controller.update(player_character, screen)
             interaction_system.check_nearby(player_character)
 
-            # Draw the map
             hollow_creek.draw(
                 screen,
                 camera_controller.x,
                 camera_controller.y
             )
 
-            # Draw the NPC
+            # Draw quest items
+            interaction_system.draw_pond_clue(
+                screen,
+                camera_controller.x,
+                camera_controller.y
+            )
+
+            interaction_system.draw_photo(
+                screen,
+                camera_controller.x,
+                camera_controller.y
+            )
+
+            interaction_system.draw_red_house_key(
+                screen,
+                camera_controller.x,
+                camera_controller.y
+            )
+
+            # Draw house residents
+            blue_npc.draw(
+                screen,
+                camera_controller.x,
+                camera_controller.y
+            )
+
+            black_npc.draw(
+                screen,
+                camera_controller.x,
+                camera_controller.y
+            )
+
+            green_npc.draw(
+                screen,
+                camera_controller.x,
+                camera_controller.y
+            )
+
+            # Draw Mara / Elliot
             if important_character is not None:
                 important_character.draw(
                     screen,
@@ -252,21 +430,21 @@ def main():
                     camera_controller.y
                 )
 
-            # Draw the player
             player_character.draw(
                 screen,
                 camera_controller.x,
                 camera_controller.y
             )
 
-            # Draw interactions and objectives
             interaction_system.draw_prompt(screen, settings_screen)
             interaction_system.draw_dialog(screen, settings_screen)
 
             objective_system.draw(screen)
 
-        if screenshot_requested:
-            take_screenshot()
+        # Ending
+        elif current_screen == "ending":
+
+            draw_ending()
 
         pygame.display.flip()
 
