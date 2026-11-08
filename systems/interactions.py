@@ -16,7 +16,8 @@ class interactions():
             "red_house": "A red house. Someone lives here.",
             "blue_house": "A blue house. The curtains are closed.",
             "black_house": "A dark, quiet-looking house.",
-            "green_house": "A green house surrounded by greenery."
+            "green_house": "A green house surrounded by greenery.",
+            "npc": "I've been waiting for you. something strange is happening in hollow creek."
         }
 
     def check_nearby(self, player):

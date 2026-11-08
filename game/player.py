@@ -1,4 +1,3 @@
-
 import pygame
 from settings import *
 from assets.colours import *
@@ -84,22 +83,23 @@ class player():
         dx = 0
         dy = 0
 
-        if keys[self.keybinds["Move up"]]:
+        # Movement using configured keys or arrow keys
+        if keys[self.keybinds["Move up"]] or keys[pygame.K_UP]:
             dy -= self.speed
             self.direction = "up"
             self.facing_right = False
 
-        if keys[self.keybinds["Move down"]]:
+        if keys[self.keybinds["Move down"]] or keys[pygame.K_DOWN]:
             dy += self.speed
             self.direction = "down"
             self.facing_right = False
 
-        if keys[self.keybinds["Move right"]]:
+        if keys[self.keybinds["Move right"]] or keys[pygame.K_RIGHT]:
             dx += self.speed
             self.direction = "side"
             self.facing_right = True
 
-        if keys[self.keybinds["Move left"]]:
+        if keys[self.keybinds["Move left"]] or keys[pygame.K_LEFT]:
             dx -= self.speed
             self.direction = "side"
             self.facing_right = False
