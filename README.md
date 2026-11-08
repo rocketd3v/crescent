@@ -2,9 +2,6 @@
 
 you can use arrow keys or TAB to navigate the menu, and return to select an option from the menu
 
-Total time taken: 13h 2m
-
-
 Game loop:
 1) explore the world
 - walk around and discover stuff
